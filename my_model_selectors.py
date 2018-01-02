@@ -87,7 +87,7 @@ class SelectorBIC(ModelSelector):
             model = self.base_model(n_components)
             try:
                 logL = model.score(self.X, self.lengths)
-            except ValueError:
+            except (ValueError, AttributeError):
                 logL = -1e9
             n_params = n_components * (n_components - 1) + 2 * n_features * n_components
             bic = -2 * logL + n_params * logN
@@ -119,7 +119,7 @@ class SelectorDIC(ModelSelector):
             for word in self.words:
                 try:
                     scores[n_components][word] = model.score(*self.hwords[word])
-                except ValueError:
+                except (ValueError, AttributeError):
                     scores[n_components][word] = -1e9
 
         best_n_components = self.n_constant
